@@ -36,6 +36,9 @@ if { ![info exists et_static] } {
 
     set output [remote_exec host "$compiler -print-file-name=testsuite/et-static.exp"]
     set et_static [string trim [lindex $output 1]]
+    # A pty may prefix the captured output with an ANSI escape (e.g. a ConPTY
+    # ESC[6n cursor-position query under MSYS2); keep only the path itself.
+    regexp -- {([A-Za-z]:[^\r\n]*et-static\.exp|/[^\r\n]*et-static\.exp)} $et_static et_static
 }
 
 if { ![file exists $et_static] } {

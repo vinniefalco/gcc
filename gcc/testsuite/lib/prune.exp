@@ -37,6 +37,10 @@ proc prune_gcc_output { text } {
     # Handle any freeform regexps.
     set text [handle-dg-regexps $text]
 
+    # Strip ANSI escape sequences (e.g. a ConPTY ESC[6n cursor-position query
+    # that a pty prefixes onto captured output under MSYS2).
+    regsub -all "\033\\\[\[0-9;\]*\[a-zA-Z]" $text "" text
+
     # Remove Windows .exe suffix
     regsub -all "(as|cc1|cc1plus|collect2|f951|ld|lto-wrapper)\.exe?:" $text {\1:} text
 
